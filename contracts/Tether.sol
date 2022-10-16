@@ -8,20 +8,20 @@ contract Tether {
     
     string symbol;
     string tether;
-    string totalSupply =1000000000000000000000000;
+    uint public totalSupply =1000000000000000000000000;
 
-    
+
     event transaction(address from, address to, uint amount);
     event allowanceTransaction(address from , address to , uint amount);
 
     mapping (address => uint) public balances;
     mapping (address => mapping(address=>uint)) public allowanceBalances;
-
+ 
     constructor(){
         balances[msg.sender]+=totalSupply;
     }
 
-    function  transfer(address to, uint amount)  returns (bool success) {
+    function  transfer(address to, uint amount) public  returns (bool success) {
         require(balances[msg.sender]>=amount,"You dont have sufficient balance");
 
         balances[msg.sender]-=amount;
@@ -33,7 +33,7 @@ contract Tether {
 
     }
    
-   function allocation (address to, uint amount){
+   function allocation (address to, uint amount) public {
     require(balances[msg.sender]>=amount,"You dont have sufficient balance");
 
     allowanceBalances[msg.sender][to]+=amount;
@@ -42,8 +42,8 @@ contract Tether {
 
    }
 
-   function allowanceTransfer(address from ,uint amount)  returns (bool success) {
-    require(allowanceBalances[from][msg.sender]>=amount,"Dont have enough allocated amount")
+   function allowanceTransfer(address from ,uint amount) public returns (bool success) {
+    require(allowanceBalances[from][msg.sender]>=amount,"Dont have enough allocated amount");
 
     balances[from]-=amount;
     allowanceBalances[from][msg.sender]-=amount;
