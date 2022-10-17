@@ -6,7 +6,7 @@ describe('Tethers', () => {
   let owner,account1, account2,token, hardhatToken
 
   before(async () => {
-    [owner, account1, account2] = await ethers.getSigners();
+    [owner, account1, account2,account3] = await ethers.getSigners();
     console.log("signers object : ", owner);
 
 
@@ -34,8 +34,17 @@ describe('Tethers', () => {
       await hardhatToken.connect(account1).transfer(account2.address,50);
       expect(await hardhatToken.balances(account2.address)).to.equal(50);
 
-      
+    })
+    it("allocation of funds", async function(){
+       await hardhatToken.allocation(account2.address,100);
 
+       expect(await hardhatToken.allowanceBalances(owner.address,account2.address)).to.equal(100);
+
+    })
+    it("allocation transaction", async function(){
+      await hardhatToken.allocation(account3.address,100);
+      await hardhatToken.connect(account3).allowanceTransfer(owner.address,100);
+      expect( await hardhatToken.balances(account3.address)).to.equal(100)
     })
   });
 });
